@@ -6,9 +6,9 @@ export function PoweredByBanner() {
     const posthog = usePostHog()
 
     const handleClick = () => {
-        posthog?.capture('kiloclaw_cta_click', {
+        posthog?.capture('kilo_cta_click', {
             location: 'top_banner',
-            destination: 'https://app.kilo.ai/claw',
+            destination: 'https://kilo.ai?utm_source=pinchbench&utm_medium=referral',
         })
     }
 
@@ -20,19 +20,19 @@ export function PoweredByBanner() {
                         Totally An Ad
                     </span>
                     <span className="text-foreground font-medium">
-                        Hosted OpenClaw — your personal AI agent, managed by Kilo.
+                        The open source AI coding agent with 500+ models.
                     </span>
                     <span className="text-muted-foreground hidden sm:inline">
-                        $55/month + inference at cost
+                        Hosting and inference for PinchBench is sponsored by Kilo.
                     </span>
                     <a
-                        href="https://app.kilo.ai/claw"
+                        href="https://kilo.ai?utm_source=pinchbench&utm_medium=referral"
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={handleClick}
                         className="inline-flex items-center gap-1.5 px-3 py-1 ml-1 rounded-full border border-[#F8F675] bg-[#F8F675] text-black text-xs font-semibold hover:bg-[#e6e45f] transition-colors"
                     >
-                        Try KiloClaw
+                        Try Kilo
                     </a>
                 </p>
             </div>

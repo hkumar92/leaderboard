@@ -1,9 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ArrowLeft } from 'lucide-react'
 import { ShareButton } from '@/components/share-button'
 import { RunSelector } from '@/components/run-selector'
 import { ScoreGauge } from '@/components/score-gauge'
@@ -40,25 +38,6 @@ export default async function SubmissionPage({ params, searchParams }: Submissio
   } catch (error) {
     return (
       <div className="min-h-screen bg-background">
-        <header className="border-b border-border">
-          <div className="max-w-7xl mx-auto px-6 py-6">
-            <div className="flex items-center justify-between">
-              <Link href={officialOnly ? '/' : '/?official=false'}>
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">🦞</span>
-                <div>
-                  <h1 className="text-xl font-bold text-foreground">PinchBench</h1>
-                  <p className="text-xs text-muted-foreground">Submission Details</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
         <div className="max-w-7xl mx-auto px-6 py-12">
           <Card className="p-6 bg-card border-border">
             <h2 className="text-lg font-semibold text-foreground mb-2">
@@ -87,31 +66,6 @@ export default async function SubmissionPage({ params, searchParams }: Submissio
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link href={officialOnly ? '/' : '/?official=false'}>
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🦞</span>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">
-                  PinchBench
-                </h1>
-                <p className="text-xs text-muted-foreground">
-                  Submission Details
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Model Header */}
         <div className="mb-8">

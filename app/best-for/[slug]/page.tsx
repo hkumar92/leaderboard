@@ -69,10 +69,7 @@ export default async function BestForPage({ params, searchParams }: BestForPageP
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/40">
         <div className="mx-auto max-w-7xl px-6 py-8">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <Link href={officialOnly ? "/" : "/?official=false"} className="text-sm text-muted-foreground hover:text-foreground">
-              Back to leaderboard
-            </Link>
+          <div className="mb-6 flex flex-wrap items-center justify-end gap-3">
             <VersionSelector versions={versionsResponse.versions} currentVersion={version ?? null} />
           </div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Best For</p>
