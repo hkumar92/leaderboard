@@ -87,12 +87,6 @@ export default async function UserPage({ params, searchParams }: UserPageProps) 
       {/* Header */}
       <header className="border-b border-border">
         <div className="max-w-4xl mx-auto px-6 py-6">
-          <Link
-            href="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 inline-block"
-          >
-            ← Back to Leaderboard
-          </Link>
           <div className="flex items-center gap-4">
             <img
               src={`https://github.com/${github_username}.png?size=80`}

@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
 import { PROVIDER_COLORS } from '@/lib/types'
 import { fetchSubmissions, fetchBenchmarkVersions } from '@/lib/api'
 import { normalizeProvider } from '@/lib/transforms'
@@ -32,35 +30,10 @@ export default async function RunsPage({ searchParams }: RunsPageProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link href={version ? `/?version=${version}${officialOnly ? '' : '&official=false'}` : (officialOnly ? '/' : '/?official=false')}>
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🦞</span>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">PinchBench</h1>
-                <p className="text-xs text-muted-foreground">
-                  All Runs &mdash; {versionLabel}
-                </p>
-                {!officialOnly && (
-                  <p className="text-xs text-amber-300">Including unofficial runs</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="mb-4 flex items-baseline gap-3">
           <h2 className="text-lg font-semibold text-foreground">
-            {sorted.length} runs
+            All Runs — {versionLabel}
           </h2>
           {!version && (
             <span className="text-sm text-muted-foreground">
@@ -71,6 +44,9 @@ export default async function RunsPage({ searchParams }: RunsPageProps) {
             <span className="text-sm text-muted-foreground">
               version: {version}
             </span>
+          )}
+          {!officialOnly && (
+            <span className="text-sm text-amber-300">Including unofficial runs</span>
           )}
         </div>
 

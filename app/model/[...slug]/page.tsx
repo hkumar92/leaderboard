@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ArrowLeft, Activity } from 'lucide-react'
+import { Activity } from 'lucide-react'
 import { PROVIDER_COLORS, type TaskResult } from '@/lib/types'
 import { fetchModelSubmissions, fetchSubmission } from '@/lib/api'
 import { getModelBadgeStatuses } from '@/lib/badges'
@@ -157,15 +157,6 @@ export default async function ModelPage({ params, searchParams }: ModelPageProps
     <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50">
         <div className="max-w-7xl mx-auto px-6 py-8">
-          <Link
-            href={officialOnly ? '/' : '/?official=false'}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 inline-block"
-          >
-            <Button variant="ghost" size="sm" className="-ml-2">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Leaderboard
-            </Button>
-          </Link>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">

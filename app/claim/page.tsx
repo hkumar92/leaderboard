@@ -20,19 +20,6 @@ export default async function ClaimPage({ searchParams }: ClaimPageProps) {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-6">
-          <Link
-            href="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors inline-block"
-          >
-            ← Back to Leaderboard
-          </Link>
-        </div>
-      </header>
-
-      {/* Content */}
       <main className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">

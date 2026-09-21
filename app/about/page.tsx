@@ -1,13 +1,21 @@
 import type { Metadata } from 'next'
 import { Github, ExternalLink, FileCode, Database, BarChart3, Cog, GitCommit } from 'lucide-react'
 import Link from 'next/link'
+import { fetchLeaderboard } from '@/lib/api'
+import { buildQualityValueSentence } from '@/lib/model-families'
+import { calculateRanks, transformLeaderboardEntry } from '@/lib/transforms'
 
 export const metadata: Metadata = {
     title: 'About PinchBench - Best Models for OpenClaw FAQ',
     description: 'Learn how PinchBench benchmarks AI models for OpenClaw. FAQ: What is the best model for OpenClaw? How are models tested? Which model should I use?',
 }
 
-const faqJsonLd = {
+function buildFaqJsonLd(qualityValueSentence: string) {
+    const rankingBlurb = qualityValueSentence
+        ? ` ${qualityValueSentence} Check PinchBench leaderboard for current rankings.`
+        : ' Check PinchBench leaderboard for current rankings.'
+
+    return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: [
@@ -16,7 +24,7 @@ const faqJsonLd = {
             name: 'What is the best model for OpenClaw?',
             acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'The best model depends on your priorities. For highest success rate, Claude and GPT-4 models typically lead. For budget-conscious users, smaller models like Mistral and Llama offer better value. Check PinchBench leaderboard for current rankings.',
+                text: `The best model depends on your priorities. For highest success rate, check the Success Rate leaderboard. For budget-conscious users, the Cost and Value views show which models deliver the best results per dollar.${rankingBlurb}`,
             },
         },
         {
@@ -24,7 +32,7 @@ const faqJsonLd = {
             name: 'Which AI model should I use for coding with OpenClaw?',
             acceptedAnswer: {
                 '@type': 'Answer',
-                text: 'For coding tasks, models with strong reasoning capabilities perform best. Models scoring above 80% on PinchBench are generally reliable for production coding workflows.',
+                text: 'For coding tasks, models with strong reasoning capabilities perform best. Models scoring above 80% on PinchBench are generally reliable for production coding workflows. Compare models on the Kilo leaderboard at https://kilo.ai/leaderboard.',
             },
         },
         {
@@ -44,6 +52,7 @@ const faqJsonLd = {
             },
         },
     ],
+    }
 }
 
 const BENCHMARK_CATEGORIES = [
@@ -218,23 +227,29 @@ const BENCHMARK_CATEGORIES = [
     ]},
 ] as const
 
-export default function AboutPage() {
+async function loadQualityValueSentence(): Promise<string> {
+    try {
+        const response = await fetchLeaderboard()
+        const entries = calculateRanks(response.leaderboard.map(transformLeaderboardEntry))
+        return buildQualityValueSentence(entries)
+    } catch {
+        return ''
+    }
+}
+
+export default async function AboutPage() {
+    const qualityValueSentence = await loadQualityValueSentence()
+
     return (
         <>
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(qualityValueSentence)) }}
             />
             <main className="min-h-screen bg-background">
             {/* Header */}
             <header className="border-b border-border bg-card/50">
                 <div className="max-w-4xl mx-auto px-6 py-8">
-                    <Link
-                        href="/"
-                        className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-4 inline-block"
-                    >
-                        ← Back to Leaderboard
-                    </Link>
                     <h1 className="text-3xl font-bold text-foreground flex items-center gap-3">
                         <span className="text-4xl">🦀</span>
                         About PinchBench
@@ -566,8 +581,7 @@ export default function AboutPage() {
                                 The best model depends on your priorities. For highest success rate, check the{' '}
                                 <Link href="/" className="text-primary hover:underline">Success Rate leaderboard</Link>.
                                 For fastest completions, see the Speed view. For budget-conscious users, the Cost and Value
-                                views show which models deliver the best results per dollar. Claude, GPT-4, and Gemini models
-                                typically lead on quality, while smaller models like Mistral and Llama offer better value.
+                                views show which models deliver the best results per dollar.{qualityValueSentence ? ` ${qualityValueSentence}` : ''}
                             </p>
                         </div>
                         <div className="p-4 rounded-lg bg-card border border-border">
@@ -576,7 +590,8 @@ export default function AboutPage() {
                                 For coding tasks, models with strong reasoning capabilities perform best. Check the task-by-task
                                 breakdown on any model's detail page to see how it handles specific coding challenges like
                                 file creation, API workflows, and script generation. Models scoring above 80% on the benchmark
-                                are generally reliable for production coding workflows.
+                                are generally reliable for production coding workflows. Compare models on the{' '}
+                                <a href="https://kilo.ai/leaderboard" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Kilo leaderboard</a>.
                             </p>
                         </div>
                         <div className="p-4 rounded-lg bg-card border border-border">

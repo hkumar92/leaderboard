@@ -1,190 +1,139 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowLeft, Users, TrendingUp } from 'lucide-react'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { fetchContributors } from '@/lib/api'
-import { PROVIDER_COLORS } from '@/lib/types'
-import { formatDistanceToNow } from 'date-fns'
+import { Github, Users } from 'lucide-react'
+import { fetchGithubOrgContributors, GITHUB_ORG } from '@/lib/github-contributors'
 
 export const metadata: Metadata = {
-  title: 'Top Contributors — PinchBench',
-  description: 'Ranking of top PinchBench contributors by submissions, models tested, and benchmark coverage.',
-}
-
-interface ContributorRow {
-  github_username: string
-  total_submissions: number
-  unique_models: number
-  best_score_percentage: number
-  first_submission_at: string
-  last_submission_at: string
-  providers: string[]
-}
-
-function getScoreColor(pct: number) {
-  if (pct >= 0.85) return 'text-green-500'
-  if (pct >= 0.7) return 'text-yellow-500'
-  return 'text-red-500'
+    title: 'Contributors — PinchBench',
+    description: 'People who contribute to PinchBench on GitHub across the skill, API, leaderboard, and other public repositories.',
 }
 
 function getRankEmoji(rank: number) {
-  if (rank === 1) return '🦞'
-  if (rank === 2) return '🦀'
-  if (rank === 3) return '🦐'
-  return ''
+    if (rank === 1) return '🦞'
+    if (rank === 2) return '🦀'
+    if (rank === 3) return '🦐'
+    return null
 }
 
 export default async function ContributorsPage() {
-  let contributors: ContributorRow[] = []
+    let repos: Awaited<ReturnType<typeof fetchGithubOrgContributors>>['repos'] = []
+    let contributors: Awaited<ReturnType<typeof fetchGithubOrgContributors>>['contributors'] = []
+    let loadError = false
 
-  try {
-    const data = await fetchContributors({ limit: 100 })
-    contributors = data.contributors.map(c => ({
-      github_username: c.github_username,
-      total_submissions: c.total_submissions,
-      unique_models: c.unique_models,
-      best_score_percentage: c.best_score_percentage,
-      first_submission_at: c.first_submission_at,
-      last_submission_at: c.last_submission_at,
-      providers: c.providers,
-    }))
-  } catch {
-    // API endpoint doesn't exist yet — show coming soon
-  }
+    try {
+        const data = await fetchGithubOrgContributors()
+        repos = data.repos
+        contributors = data.contributors
+    } catch {
+        loadError = true
+    }
 
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <Link href="/">
-              <Button variant="ghost" size="sm">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
-              </Button>
-            </Link>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">🦞</span>
-              <div>
-                <h1 className="text-xl font-bold text-foreground">PinchBench</h1>
-                <p className="text-xs text-muted-foreground">Top Contributors</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex items-center gap-3 mb-6">
-          <Users className="h-6 w-6 text-muted-foreground" />
-          <h2 className="text-2xl font-bold text-foreground">Contributor Leaderboard</h2>
-        </div>
-
-        <p className="text-sm text-muted-foreground mb-6">
-          Ranking of community members who have contributed benchmark runs.
-          Sorted by total submissions, with models tested and best score shown.
-        </p>
-
-        {contributors.length === 0 ? (
-          <Card className="p-8 bg-card border-border text-center">
-            <div className="flex flex-col items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center">
-                <TrendingUp className="h-8 w-8 text-muted-foreground" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">Coming Soon</h3>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  The contributor leaderboard is being prepared. Once available, you'll see
-                  rankings of top community benchmarkers by submissions, models tested, and coverage.
+    return (
+        <div className="min-h-screen bg-background">
+            <div className="max-w-7xl mx-auto px-6 py-8">
+                <div className="flex items-center gap-3 mb-3">
+                    <Users className="h-6 w-6 text-muted-foreground" />
+                    <h1 className="text-2xl font-bold text-foreground">Contributors</h1>
+                </div>
+                <p className="text-sm text-muted-foreground max-w-2xl mb-8">
+                    Commit authors across public{' '}
+                    <a
+                        href={`https://github.com/${GITHUB_ORG}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                    >
+                        {GITHUB_ORG}
+                    </a>{' '}
+                    repositories. New public repos in the org are picked up automatically.
                 </p>
-              </div>
-              <Link href="/">
-                <Button variant="outline">Back to Leaderboard</Button>
-              </Link>
-            </div>
-          </Card>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border text-left text-muted-foreground">
-                  <th className="py-3 px-4 font-medium">Rank</th>
-                  <th className="py-3 px-4 font-medium">Contributor</th>
-                  <th className="py-3 px-4 font-medium text-right">Submissions</th>
-                  <th className="py-3 px-4 font-medium text-right">Models</th>
-                  <th className="py-3 px-4 font-medium text-right">Best Score</th>
-                  <th className="py-3 px-4 font-medium hidden md:table-cell">Providers</th>
-                  <th className="py-3 px-4 font-medium hidden md:table-cell">Active</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contributors.map((contributor, index) => (
-                  <tr
-                    key={contributor.github_username}
-                    className="border-b border-border/50 hover:bg-muted/30 transition-colors"
-                  >
-                    <td className="py-3 px-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl">{getRankEmoji(index + 1)}</span>
-                        <span className="text-sm font-medium text-muted-foreground">
-                          {index + 1}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <Link
-                        href={`/user/${encodeURIComponent(contributor.github_username)}`}
-                        className="flex items-center gap-2 hover:underline"
-                      >
-                        <img
-                          src={`https://github.com/${contributor.github_username}.png?size=32`}
-                          alt=""
-                          className="w-6 h-6 rounded-full"
-                        />
-                        <span className="font-mono text-foreground">{contributor.github_username}</span>
-                      </Link>
-                    </td>
-                    <td className="py-3 px-4 text-right font-mono font-bold text-foreground">
-                      {contributor.total_submissions}
-                    </td>
-                    <td className="py-3 px-4 text-right font-mono text-foreground">
-                      {contributor.unique_models}
-                    </td>
-                    <td className={`py-3 px-4 text-right font-mono font-bold ${getScoreColor(contributor.best_score_percentage)}`}>
-                      {(contributor.best_score_percentage * 100).toFixed(1)}%
-                    </td>
-                    <td className="py-3 px-4 hidden md:table-cell">
-                      <div className="flex flex-wrap gap-1 justify-end">
-                        {contributor.providers.slice(0, 3).map(provider => (
-                          <Badge
-                            key={provider}
-                            variant="outline"
-                            className="text-[10px]"
-                            style={{
-                              borderColor: PROVIDER_COLORS[provider] || '#666',
-                              color: PROVIDER_COLORS[provider] || '#666',
-                            }}
-                          >
-                            {provider}
-                          </Badge>
+
+                {repos.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-8">
+                        {repos.map((repo) => (
+                            <a
+                                key={repo.name}
+                                href={repo.htmlUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/50 border border-border/50 text-xs text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+                            >
+                                <Github className="h-3 w-3" />
+                                {GITHUB_ORG}/{repo.name}
+                            </a>
                         ))}
-                        {contributor.providers.length > 3 && (
-                          <span className="text-xs text-muted-foreground">+{contributor.providers.length - 3}</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 text-xs text-muted-foreground hidden md:table-cell whitespace-nowrap">
-                      {formatDistanceToNow(new Date(contributor.last_submission_at), { addSuffix: true })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </div>
-  )
+                    </div>
+                )}
+
+                {loadError ? (
+                    <div className="rounded-lg border border-border bg-card p-8 text-center">
+                        <p className="text-sm text-muted-foreground">
+                            Couldn’t load GitHub contributors right now.{' '}
+                            <a
+                                href={`https://github.com/${GITHUB_ORG}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline"
+                            >
+                                View the org on GitHub
+                            </a>
+                            .
+                        </p>
+                    </div>
+                ) : contributors.length === 0 ? (
+                    <div className="rounded-lg border border-border bg-card p-8 text-center">
+                        <p className="text-sm text-muted-foreground">No public contributors found yet.</p>
+                    </div>
+                ) : (
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {contributors.map((person, index) => {
+                            const rank = index + 1
+                            const emoji = getRankEmoji(rank)
+                            return (
+                                <li key={person.login}>
+                                    <a
+                                        href={person.htmlUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="group flex items-start gap-4 rounded-lg border border-border bg-card p-4 hover:border-primary/60 transition-colors h-full"
+                                    >
+                                        <img
+                                            src={person.avatarUrl}
+                                            alt=""
+                                            className="w-12 h-12 rounded-full border border-border"
+                                        />
+                                        <div className="min-w-0 flex-1">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                {emoji && <span aria-hidden="true">{emoji}</span>}
+                                                <span className="text-xs tabular-nums text-muted-foreground">#{rank}</span>
+                                                <span className="font-mono font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                                                    {person.login}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-muted-foreground mb-3">
+                                                <span className="font-semibold text-foreground tabular-nums">
+                                                    {person.contributions.toLocaleString()}
+                                                </span>
+                                                {' '}
+                                                {person.contributions === 1 ? 'commit' : 'commits'}
+                                            </p>
+                                            <div className="flex flex-wrap gap-1">
+                                                {person.repos.map((repo) => (
+                                                    <span
+                                                        key={repo}
+                                                        className="px-2 py-0.5 rounded-full bg-secondary/50 border border-border/50 text-[10px] text-muted-foreground"
+                                                    >
+                                                        {repo}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                )}
+            </div>
+        </div>
+    )
 }

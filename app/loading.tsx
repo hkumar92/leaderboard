@@ -4,23 +4,12 @@ export default function Loading() {
     return (
         <div className="min-h-screen bg-background">
             <header className="border-b border-border">
-                <div className="max-w-7xl mx-auto px-6 py-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <span className="text-4xl">🦞</span>
-                            <div>
-                                <h1 className="text-2xl font-bold text-foreground">PinchBench</h1>
-                                <p className="text-sm text-muted-foreground">
-                                    Claw-some AI Agent Testing
-                                </p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <Skeleton className="h-4 w-20" />
-                            <Skeleton className="h-4 w-32" />
-                        </div>
+                <div className="max-w-7xl mx-auto px-6 py-4">
+                    <div className="flex items-center gap-4">
+                        <Skeleton className="h-10 flex-1 max-w-xl" />
+                        <Skeleton className="h-10 w-24" />
                     </div>
-                    <div className="flex gap-2 mt-6">
+                    <div className="flex gap-2 mt-4">
                         <Skeleton className="h-9 w-28" />
                         <Skeleton className="h-9 w-20" />
                         <Skeleton className="h-9 w-20" />

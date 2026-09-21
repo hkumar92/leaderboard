@@ -4,19 +4,6 @@ import { Card } from '@/components/ui/card'
 export default function Loading() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">🦞</span>
-            <div>
-              <h1 className="text-xl font-bold text-foreground">PinchBench</h1>
-              <p className="text-xs text-muted-foreground">Loading...</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Model Header */}
         <div className="mb-8">

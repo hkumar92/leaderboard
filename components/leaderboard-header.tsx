@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Github, BarChart3, Zap, Gem, DollarSign, Trophy, Activity } from 'lucide-react'
+import { BarChart3, Zap, Gem, DollarSign, Trophy, Activity } from 'lucide-react'
 import type { LeaderboardEntry } from '@/lib/types'
 import { ModelSearch } from '@/components/model-search'
 import { FilterPanel } from '@/components/filter-panel'
@@ -89,31 +89,10 @@ export function LeaderboardHeader({
   onShowZeroCostResultsChange,
 }: LeaderboardHeaderProps) {
   return (
-    <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
-      {/* Top Row: Branding | Search | Actions */}
+    <header className="border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-16 z-40">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="flex items-center gap-4 h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-2.5 flex-shrink-0">
-            <img
-              src="/apple-touch-icon.png"
-              alt="PinchBench"
-              className="w-7 h-7 md:w-8 md:h-8"
-            />
-            <div className="hidden sm:block">
-              <Link href="/" className="hover:opacity-80 transition-opacity">
-                <h1 className="text-lg md:text-xl font-bold text-foreground tracking-tight">
-                  PinchBench <span className="ml-1 inline-flex items-center px-1.5 py-0.5 rounded-full bg-secondary/50 border border-border/50 text-xs font-medium text-muted-foreground">v2</span>
-                </h1>
-                <p className="text-[10px] font-medium tracking-[0.2em] text-muted-foreground uppercase mt-0.5">
-                  OpenClaw Leaderboard
-                </p>
-              </Link>
-            </div>
-          </div>
-
-          {/* Search - Prominent, centered, flex-grow */}
-          <div className="flex-1 max-w-xl mx-auto">
+          <div className="flex-1 max-w-xl">
             <ModelSearch
               entries={entries}
               officialOnly={officialOnly}
@@ -121,63 +100,31 @@ export function LeaderboardHeader({
               onSearchChange={onModelSearchChange}
             />
           </div>
-
-{/* Actions */}
-           <div className="flex items-center gap-2 flex-shrink-0">
-             <FilterPanel
-               entries={entries}
-               versions={versions}
-               currentVersion={currentVersion}
-               view={view}
-               scoreMode={scoreMode}
-               sortMode={sortMode}
-               officialOnly={officialOnly}
-               openWeightsOnly={openWeightsOnly}
-               providerFilters={providerFilters}
-               maxCostFilter={maxCostFilter}
-               showZeroCostResults={showZeroCostResults}
-               lastUpdated={lastUpdated}
-               onVersionChange={(version) => {
-                 // This is handled by VersionSelector internally via router
-                 // We pass a no-op since VersionSelector manages its own navigation
-               }}
-               onScoreModeChange={onScoreModeChange}
-               onSortModeChange={onSortModeChange}
-               onOfficialOnlyChange={onOfficialOnlyChange}
-               onOpenWeightsOnlyChange={onOpenWeightsOnlyChange}
-               onProviderToggle={onProviderToggle}
-               onClearProviders={onClearProviders}
-               onMaxCostFilterChange={onMaxCostFilterChange}
-               onShowZeroCostResultsChange={onShowZeroCostResultsChange}
-             />
-            <Link
-              href="/about"
-              className="hidden md:inline-flex px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="/best-for/coding"
-              className="hidden md:inline-flex px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-            >
-              Best For
-            </Link>
-            <Link
-              href="/contributors"
-              className="hidden md:inline-flex px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-            >
-              Contributors
-            </Link>
-            <a
-              href="https://github.com/pinchbench"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-foreground hover:bg-secondary transition-colors"
-            >
-              <Github className="h-4 w-4" />
-              <span className="hidden sm:inline">GitHub</span>
-            </a>
-          </div>
+          <FilterPanel
+            entries={entries}
+            versions={versions}
+            currentVersion={currentVersion}
+            view={view}
+            scoreMode={scoreMode}
+            sortMode={sortMode}
+            officialOnly={officialOnly}
+            openWeightsOnly={openWeightsOnly}
+            providerFilters={providerFilters}
+            maxCostFilter={maxCostFilter}
+            showZeroCostResults={showZeroCostResults}
+            lastUpdated={lastUpdated}
+            onVersionChange={() => {
+              // VersionSelector manages its own navigation
+            }}
+            onScoreModeChange={onScoreModeChange}
+            onSortModeChange={onSortModeChange}
+            onOfficialOnlyChange={onOfficialOnlyChange}
+            onOpenWeightsOnlyChange={onOpenWeightsOnlyChange}
+            onProviderToggle={onProviderToggle}
+            onClearProviders={onClearProviders}
+            onMaxCostFilterChange={onMaxCostFilterChange}
+            onShowZeroCostResultsChange={onShowZeroCostResultsChange}
+          />
         </div>
       </div>
 

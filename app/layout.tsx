@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Footer } from '@/components/footer'
 import { PostHogProvider } from '@/components/posthog-provider'
+import { SiteNav } from '@/components/site-nav'
 import { TopBanner } from '@/components/top-banner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 
@@ -71,6 +72,7 @@ export default function RootLayout({
         <PostHogProvider>
           <TooltipProvider delayDuration={300} disableHoverableContent>
             <TopBanner />
+            <SiteNav />
             {children}
             <Footer />
           </TooltipProvider>
