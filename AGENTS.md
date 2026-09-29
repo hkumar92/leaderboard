@@ -62,7 +62,7 @@ Raw API types are prefixed `Api*` (e.g. `ApiLeaderboardEntry`). Always transform
 ## Key Patterns
 
 - **Server vs Client Components**: Server Components fetch data; Client Components handle interactivity. Mark with `'use client'` only when needed.
-- **URL as state**: `LeaderboardView` syncs `?view=`, `?score=`, `?provider=`, `?graph=`, `?verified=`, `?weights=`, `?slm=` to URL via `router.replace()`.
+- **URL as state**: `LeaderboardView` syncs `?view=`, `?score=`, `?provider=`, `?graph=`, `?verified=`, `?weights=`, `?slm=` to URL via `router.replace()`. It reads them only on mount, so a client-side `<Link>` from the home page to `/?…` changes the URL without applying it; links that set home-page filters must do a full page load (see `isHomeLeaderboardHref` in `components/quick-picks.tsx`).
 - **Score coloring**: green (`#22c55e`) ≥85%, yellow (`#f59e0b`) ≥70%, red (`#ef4444`) otherwise — keep consistent.
 - **Emoji ranking**: 🦞 #1, 🦀 #2, 🦐 #3 — appears in `ScoreGauge`, `SimpleLeaderboard`, and OG image route.
 - **Screenshot exclusion**: `data-share-exclude="true"` on any UI element that should be excluded from screenshot captures.
