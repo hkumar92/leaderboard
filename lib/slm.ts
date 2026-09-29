@@ -6,9 +6,10 @@ export const SLM_MAX_TOTAL_PARAMS_B = 125;
 /**
  * Total parameter counts (billions) for open-weights models, keyed by leaderboard
  * model id. Covers every model the API marks open-weights on any benchmark version,
- * plus open-weights models it reports as Unknown. Counts come from each model's
- * Hugging Face safetensors metadata unless noted. Listing a model here also marks it
- * open-weights when the API reports its weights as Unknown.
+ * plus open-weights models whose API `weights` field is "Unknown" (e.g. Gemma 4,
+ * Mistral Small 4). Counts come from each model's Hugging Face safetensors metadata
+ * unless noted. Listing a model here also marks it open-weights when the API's
+ * `weights` field is "Unknown" or missing.
  */
 const OPEN_WEIGHTS_TOTAL_PARAMS_B = new Map<string, number>([
   ["arcee-ai/trinity-large-preview:free", 398.6],
